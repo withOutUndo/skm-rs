@@ -1,10 +1,20 @@
+use anyhow::Result;
 use clap::{Parser, Subcommand};
+use std::env;
 
 use self::initialize::InitOptions;
 
 pub mod initialize;
 
-static HOME: &str = env!("HOME");
+lazy_static! {
+    static ref HOME: String = {
+        if let Ok(e) = env::var("SKM_RS_TEST") {
+            e
+        } else {
+            env!("HOME").to_string()
+        }
+    };
+}
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
@@ -13,11 +23,11 @@ pub struct SkmCliOptions {
     pub command: Command,
 
     /// Path where SKM should store its profiles
-    #[clap(long, value_parser, value_name="STORE_PATH", default_value_t=format!("{}/{}", HOME, ".skm"))]
+    #[clap(long, value_parser, value_name="STORE_PATH", default_value_t=format!("{}/{}", HOME.to_string(), ".skm-rs"))]
     store_path: String,
 
     /// Path to a .ssh folder
-    #[clap(long, default_value_t=format!("{}/{}", HOME, ".ssh"))]
+    #[clap(long, default_value_t=format!("{}/{}", HOME.to_string(), ".ssh"))]
     ssh_path: String,
 }
 
@@ -50,5 +60,5 @@ pub enum Command {
 }
 
 pub trait CommandRunner {
-    fn execute(&self) -> ();
+    fn execute(&self, cli_option: &SkmCliOptions) -> Result<()>;
 }
