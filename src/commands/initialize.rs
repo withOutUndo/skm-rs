@@ -7,7 +7,7 @@ use anyhow::Result;
 use clap::Parser;
 use colored::Colorize;
 
-use crate::{utils::is_empty, CHECK_SYMBOL, PUBLIC_KEY, PRIVATE_KEY};
+use crate::{utils::is_empty, CHECK_SYMBOL, DEFAULT_KEY, PRIVATE_KEY, PUBLIC_KEY};
 
 use super::SkmCliOptions;
 
@@ -26,8 +26,18 @@ impl super::CommandRunner for InitOptions {
 
         fs::create_dir(store_path)?;
 
-        fs::rename(&format!("{}/{}", ssh_path, PRIVATE_KEY), &format!("{}/{}", store_path, PRIVATE_KEY))?;
-        fs::rename(&format!("{}/{}", ssh_path, PUBLIC_KEY), &format!("{}/{}", store_path, PUBLIC_KEY))?;
+        fs::create_dir(format!("{}/{}", store_path, DEFAULT_KEY))?;
+
+        let store_private_key_path = format!("{}/{}/{}", store_path, DEFAULT_KEY, PRIVATE_KEY);
+        let store_public_key_path = format!("{}/{}/{}", store_path, DEFAULT_KEY, PUBLIC_KEY);
+        let link_private_key_path = format!("{}/{}", ssh_path, PRIVATE_KEY);
+        let link_public_key_path = format!("{}/{}", ssh_path, PUBLIC_KEY);
+
+        fs::rename(&link_private_key_path, &store_private_key_path)?;
+        fs::rename(&link_public_key_path, &store_public_key_path)?;
+
+        fs::hard_link(store_private_key_path, link_private_key_path)?;
+        fs::hard_link(store_public_key_path, link_public_key_path)?;
 
         println!(
             "{}",
@@ -54,7 +64,7 @@ mod tests {
         let initOptions = InitOptions {};
         let options = SkmCliOptions {
             command: Command::Init(initOptions),
-            store_path: "/home/iboom/workspace/Rust/skm-rs/test-dir".into(),
+            store_path: "./test-dira".into(),
             ssh_path: "ss".into(),
         };
 
