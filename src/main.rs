@@ -39,7 +39,9 @@ fn main() -> Result<()> {
             init_option.execute(&skm_cli_option)
         }
         Command::Create => todo!(),
-        Command::Ls => todo!(),
+        Command::Ls(list_option) => {
+            list_option.execute(&skm_cli_option)
+        },
         Command::Use => todo!(),
         Command::Delete => todo!(),
         Command::Rename => todo!(),

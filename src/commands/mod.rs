@@ -3,8 +3,10 @@ use clap::{Parser, Subcommand};
 use std::env;
 
 use self::initialize::InitOptions;
+use self::list::ListOptions;
 
 pub mod initialize;
+pub mod list;
 
 lazy_static! {
     static ref HOME: String = {
@@ -24,11 +26,11 @@ pub struct SkmCliOptions {
 
     /// Path where SKM should store its profiles
     #[clap(long, value_parser, value_name="STORE_PATH", default_value_t=format!("{}/{}", HOME.to_string(), ".skm-rs"))]
-    store_path: String,
+    pub store_path: String,
 
     /// Path to a .ssh folder
     #[clap(long, default_value_t=format!("{}/{}", HOME.to_string(), ".ssh"))]
-    ssh_path: String,
+    pub ssh_path: String,
 }
 
 #[derive(Subcommand, Debug)]
@@ -38,7 +40,7 @@ pub enum Command {
     /// Create a new SSH key.
     Create,
     /// List all the available SSH keys
-    Ls,
+    Ls(ListOptions),
     /// Set specific SSH key as default by its a lias name
     Use,
     /// Delete specific SSH key by alias name

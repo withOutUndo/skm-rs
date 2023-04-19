@@ -36,8 +36,9 @@ impl super::CommandRunner for InitOptions {
         fs::rename(&link_private_key_path, &store_private_key_path)?;
         fs::rename(&link_public_key_path, &store_public_key_path)?;
 
-        fs::hard_link(store_private_key_path, link_private_key_path)?;
-        fs::hard_link(store_public_key_path, link_public_key_path)?;
+        // TODO
+        fs::soft_link(store_private_key_path, link_private_key_path)?;
+        fs::soft_link(store_public_key_path, link_public_key_path)?;
 
         println!(
             "{}",

@@ -7,6 +7,10 @@ use std::{
 
 use crate::i_error::SkmError;
 
+pub mod load_keys;
+
+pub mod load_single_key;
+
 pub fn is_empty(path: &str) -> Result<bool> {
     match fs::read_dir(path) {
         Ok(dirs) => {
