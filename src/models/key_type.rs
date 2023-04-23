@@ -43,7 +43,7 @@ impl KeyType {
 }
 
 lazy_static! {
-    static ref SUPPORTED_KEY_TYPES: HashMap<String, KeyType> = [
+    pub static ref SUPPORTED_KEY_TYPES: HashMap<String, KeyType> = [
         (
             "rsa".to_string(),
             KeyType {

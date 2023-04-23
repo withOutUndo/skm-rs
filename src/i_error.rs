@@ -9,4 +9,7 @@ pub enum SkmError {
 
     #[error("{} {}", CROSS_SYMBOL.red(),"SSH key store already exists.".red())]
     ExistError,
+
+    #[error("custom error")]
+    OtherError,
 }

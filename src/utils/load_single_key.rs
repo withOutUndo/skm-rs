@@ -1,50 +1,57 @@
 use std::{fs, os::unix::prelude::MetadataExt, path::Path};
 
-use anyhow::{Ok, Result};
+use anyhow::{Error, Ok, Result};
 use colored::Colorize;
 
 use crate::{
     commands::SkmCliOptions,
+    i_error::SkmError,
     models::key_type::{get_by_filename, KeyType, SSHKey},
 };
 
 pub fn load_single_key(key_path: String, ssh_path: String) -> Result<SSHKey> {
     let mut key = SSHKey::default();
 
-    for entry in fs::read_dir(key_path)? {
-        let entry = entry?;
-        let path = entry.path();
-        if path.is_dir() {
-            continue;
+    if let std::io::Result::Ok(entries) = fs::read_dir(key_path) {
+        let entries = entries.collect::<Vec<_>>();
+        if entries.len() == 0 {
+            return Err(SkmError::OtherError.into());
         }
-
-        if path.to_string_lossy().contains(".pub") {
-            if let Some(name) = path.to_str() {
-                key.public_key = name.to_string();
+        for entry in entries {
+            let entry = entry?;
+            let path = entry.path();
+            if path.is_dir() {
+                continue;
             }
-            continue;
-        }
 
-        let (kt, ok) = if let Some(name) = path.file_name() {
-            get_by_filename(format!("{}", name.to_string_lossy()))
-        } else {
-            (KeyType::default(), true)
-        };
-        if !ok {
-            continue;
-        }
-        let key_base_name = kt.key_base_name.clone();
-        key.key_type = kt;
-        if let Some(name) = path.to_str() {
-            key.private_key = name.to_string();
-        }
+            if path.to_string_lossy().contains(".pub") {
+                if let Some(name) = path.to_str() {
+                    key.public_key = name.to_string();
+                }
+                continue;
+            }
 
-        let parsed_path = parsed_path(format!("{}/{}", ssh_path, key_base_name.clone()))?;
+            let (kt, ok) = if let Some(name) = path.file_name() {
+                get_by_filename(format!("{}", name.to_string_lossy()))
+            } else {
+                (KeyType::default(), true)
+            };
+            if !ok {
+                continue;
+            }
+            let key_base_name = kt.key_base_name.clone();
+            key.key_type = kt;
+            if let Some(name) = path.to_str() {
+                key.private_key = name.to_string();
+            }
 
-        if parsed_path == path.to_str().unwrap() {
-            key.is_default = true
+            let parsed_path = parsed_path(format!("{}/{}", ssh_path, key_base_name.clone()))?;
+
+            if parsed_path == path.to_str().unwrap() {
+                key.is_default = true
+            }
         }
-    }
+    };
     Ok(key)
 }
 
