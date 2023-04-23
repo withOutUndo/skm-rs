@@ -37,8 +37,10 @@ fn main() -> Result<()> {
     match command {
         Command::Init(init_option) => {
             init_option.execute(&skm_cli_option)
-        }
-        Command::Create => todo!(),
+        },
+        Command::Create(create_options) => {
+            create_options.execute(&skm_cli_option)
+        },
         Command::Ls(list_option) => {
             list_option.execute(&skm_cli_option)
         },

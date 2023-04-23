@@ -4,9 +4,11 @@ use std::env;
 
 use self::initialize::InitOptions;
 use self::list::ListOptions;
+use self::create::CreateOptions;
 
 pub mod initialize;
 pub mod list;
+pub mod create;
 
 lazy_static! {
     static ref HOME: String = {
@@ -38,7 +40,7 @@ pub enum Command {
     /// Initialize SSH keys store for the first time usage.
     Init(InitOptions),
     /// Create a new SSH key.
-    Create,
+    Create(CreateOptions),
     /// List all the available SSH keys
     Ls(ListOptions),
     /// Set specific SSH key as default by its a lias name
