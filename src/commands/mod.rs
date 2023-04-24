@@ -5,10 +5,12 @@ use std::env;
 use self::initialize::InitOptions;
 use self::list::ListOptions;
 use self::create::CreateOptions;
+use self::display::DisplayOptions;
 
 pub mod initialize;
 pub mod list;
 pub mod create;
+pub mod display;
 
 lazy_static! {
     static ref HOME: String = {
@@ -52,7 +54,7 @@ pub enum Command {
     /// Copy current SSH public key to a remote host
     Copy,
     /// Display the current SSH public key or specific SSH public key by alias name
-    Display,
+    Display(DisplayOptions),
     /// Backup all SSH keys to an archive file
     Backup,
     /// Restore SSH keys from an existing archive file

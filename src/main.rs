@@ -48,7 +48,9 @@ fn main() -> Result<()> {
         Command::Delete => todo!(),
         Command::Rename => todo!(),
         Command::Copy => todo!(),
-        Command::Display => todo!(),
+        Command::Display(option) => {
+            option.execute(&skm_cli_option)
+        },
         Command::Backup => todo!(),
         Command::Restore => todo!(),
         Command::Cache => todo!(),
