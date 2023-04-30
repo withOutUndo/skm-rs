@@ -13,7 +13,7 @@ use dialoguer::{theme::ColorfulTheme, Select};
 
 use crate::{
     i_error::SkmError,
-    models::key_type::{self, SUPPORTED_KEY_TYPES},
+    models::key_type::{self, SSHKey, SUPPORTED_KEY_TYPES},
     utils::{is_empty, load_keys::load_keys},
     CHECK_SYMBOL, CROSS_SYMBOL, DEFAULT_KEY, PRIVATE_KEY, PUBLIC_KEY,
 };
@@ -39,9 +39,12 @@ impl super::CommandRunner for SetOptions {
         let alias = if let Some(als) = &self.alias {
             (*als).to_string()
         } else {
-            let values = keys.values().collect::<Vec<_>>();
-            let keys = keys.keys().collect::<Vec<_>>();
-            let index = values.partition_point(|x| x.is_default);
+            let options = keys.iter();
+            let keys = options.clone().map(|(s, _)| s).collect::<Vec<_>>();
+            let index = options
+                .enumerate()
+                .find_map(|(i, (_, key))| if key.is_default { Some(i) } else { None })
+                .unwrap_or(0);
             let selection = Select::with_theme(&ColorfulTheme::default())
                 .with_prompt("Please select one SSH key")
                 .items(&keys)
@@ -65,14 +68,6 @@ impl super::CommandRunner for SetOptions {
 
         fs::remove_file(&link_private_key_path)?;
         fs::remove_file(&link_public_key_path)?;
-
-        println!(
-            "{}\n{}\n{}\n{}",
-            store_private_key_path,
-            store_public_key_path,
-            link_private_key_path,
-            link_public_key_path
-        );
 
         fs::soft_link(store_private_key_path, link_private_key_path)?;
         fs::soft_link(store_public_key_path, link_public_key_path)?;
