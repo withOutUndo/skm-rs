@@ -56,7 +56,6 @@ pub fn load_single_key(key_path: String, ssh_path: String) -> Result<SSHKey> {
 }
 
 pub fn parsed_path(path: String) -> Result<String> {
-    let file_path = Path::new(&path);
     let info = fs::symlink_metadata(&path)?;
 
     if info.is_symlink() {
@@ -64,11 +63,7 @@ pub fn parsed_path(path: String) -> Result<String> {
         if origin_file.is_absolute() {
             return Ok(format!("{}", origin_file.as_path().to_str().unwrap()));
         } else {
-            return Ok(format!(
-                "{}{}",
-                file_path.canonicalize()?.to_str().unwrap(),
-                origin_file.to_str().unwrap()
-            ));
+            return Ok(format!("{}", origin_file.canonicalize()?.to_string_lossy(),));
         }
     }
 
