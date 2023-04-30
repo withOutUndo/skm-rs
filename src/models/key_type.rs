@@ -40,6 +40,10 @@ impl KeyType {
     pub fn public_key(self: &Self) -> String {
         format!("{}.pub", self.key_base_name)
     }
+
+    pub fn private_key(self: &Self) -> String {
+        format!("{}", self.key_base_name)
+    }
 }
 
 lazy_static! {

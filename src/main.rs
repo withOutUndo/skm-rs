@@ -44,7 +44,9 @@ fn main() -> Result<()> {
         Command::Ls(list_option) => {
             list_option.execute(&skm_cli_option)
         },
-        Command::Use => todo!(),
+        Command::Use(set_option) => {
+            set_option.execute(&skm_cli_option)
+        },
         Command::Delete => todo!(),
         Command::Rename => todo!(),
         Command::Copy => todo!(),

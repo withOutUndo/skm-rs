@@ -6,11 +6,13 @@ use self::initialize::InitOptions;
 use self::list::ListOptions;
 use self::create::CreateOptions;
 use self::display::DisplayOptions;
+use self::set::SetOptions;
 
 pub mod initialize;
 pub mod list;
 pub mod create;
 pub mod display;
+pub mod set;
 
 lazy_static! {
     static ref HOME: String = {
@@ -46,7 +48,7 @@ pub enum Command {
     /// List all the available SSH keys
     Ls(ListOptions),
     /// Set specific SSH key as default by its a lias name
-    Use,
+    Use(SetOptions),
     /// Delete specific SSH key by alias name
     Delete,
     /// Rename SSH key alias name to a new one
