@@ -7,12 +7,14 @@ use self::list::ListOptions;
 use self::create::CreateOptions;
 use self::display::DisplayOptions;
 use self::set::SetOptions;
+use self::delete::DeleteOptions;
 
 pub mod initialize;
 pub mod list;
 pub mod create;
 pub mod display;
 pub mod set;
+pub mod delete;
 
 lazy_static! {
     static ref HOME: String = {
@@ -50,7 +52,7 @@ pub enum Command {
     /// Set specific SSH key as default by its a lias name
     Use(SetOptions),
     /// Delete specific SSH key by alias name
-    Delete,
+    Delete(DeleteOptions),
     /// Rename SSH key alias name to a new one
     Rename,
     /// Copy current SSH public key to a remote host

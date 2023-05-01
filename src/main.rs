@@ -47,7 +47,9 @@ fn main() -> Result<()> {
         Command::Use(set_option) => {
             set_option.execute(&skm_cli_option)
         },
-        Command::Delete => todo!(),
+        Command::Delete(delete_options) => {
+            delete_options.execute(&skm_cli_option)
+        },
         Command::Rename => todo!(),
         Command::Copy => todo!(),
         Command::Display(option) => {
