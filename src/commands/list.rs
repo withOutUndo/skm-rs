@@ -1,17 +1,10 @@
-use std::{
-    fs::{self, File},
-    io::{self, ErrorKind},
-};
+use std::fs::{self};
 
 use anyhow::{Ok, Result};
 use clap::Parser;
 use colored::Colorize;
 
-use crate::{
-    models::key_type,
-    utils::{is_empty, load_keys::load_keys},
-    CHECK_SYMBOL, DEFAULT_KEY, PRIVATE_KEY, PUBLIC_KEY,
-};
+use crate::{utils::load_keys::load_keys, CHECK_SYMBOL};
 
 use super::SkmCliOptions;
 
@@ -46,17 +39,17 @@ impl super::CommandRunner for ListOptions {
                 key_type = &key_str[2];
             }
 
-            let key_type = key_type.replace("\n", "");
+            let key_type = format!("[{}]", key_type.replace("\n", ""));
 
             if ssh_key.is_default {
                 println!(
                     "{}",
-                    format!("->\t{} \t[{}] \t[{}]", key, key_type, key_desc).green()
+                    format!("->\t{:20}{:<20} \t[{}]", key, key_type, key_desc).green()
                 );
             } else {
                 println!(
                     "{}",
-                    format!(" \t{} \t[{}] \t[{}]", key, key_type, key_desc).blue()
+                    format!(" \t{:20}{:<20} \t[{}]", key, key_type, key_desc).blue()
                 );
             }
         }
