@@ -53,7 +53,9 @@ fn main() -> Result<()> {
         Command::Rename(rename_options) => {
             rename_options.execute(&skm_cli_option)
         },
-        Command::Copy => todo!(),
+        Command::Copy(copy_options) => {
+            copy_options.execute(&skm_cli_option)
+        },
         Command::Display(option) => {
             option.execute(&skm_cli_option)
         },

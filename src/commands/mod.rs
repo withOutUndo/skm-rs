@@ -9,6 +9,7 @@ use self::display::DisplayOptions;
 use self::set::SetOptions;
 use self::delete::DeleteOptions;
 use self::rename::RenameOptions;
+use self::copy::CopyOptions;
 
 pub mod initialize;
 pub mod list;
@@ -17,6 +18,7 @@ pub mod display;
 pub mod set;
 pub mod delete;
 pub mod rename;
+pub mod copy;
 
 lazy_static! {
     static ref HOME: String = {
@@ -58,7 +60,7 @@ pub enum Command {
     /// Rename SSH key alias name to a new one
     Rename(RenameOptions),
     /// Copy current SSH public key to a remote host
-    Copy,
+    Copy(CopyOptions),
     /// Display the current SSH public key or specific SSH public key by alias name
     Display(DisplayOptions),
     /// Backup all SSH keys to an archive file
