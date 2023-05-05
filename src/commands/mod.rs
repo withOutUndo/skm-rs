@@ -8,6 +8,7 @@ use self::create::CreateOptions;
 use self::display::DisplayOptions;
 use self::set::SetOptions;
 use self::delete::DeleteOptions;
+use self::rename::RenameOptions;
 
 pub mod initialize;
 pub mod list;
@@ -15,6 +16,7 @@ pub mod create;
 pub mod display;
 pub mod set;
 pub mod delete;
+pub mod rename;
 
 lazy_static! {
     static ref HOME: String = {
@@ -54,7 +56,7 @@ pub enum Command {
     /// Delete specific SSH key by alias name
     Delete(DeleteOptions),
     /// Rename SSH key alias name to a new one
-    Rename,
+    Rename(RenameOptions),
     /// Copy current SSH public key to a remote host
     Copy,
     /// Display the current SSH public key or specific SSH public key by alias name
